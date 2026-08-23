@@ -1,0 +1,43 @@
+{
+  "$comment": "Read from Google's Drive v3 discovery document: files.create -> POST files, request File, response File. The discovery document's servicePath is drive/v3/, so the full metadata-only path is /drive/v3/files -- not /files and not a guessed /v3/files.",
+  "operation": "folder_create",
+  "kind": "folder",
+  "title": "Google Drive folder",
+  "description": "Create a folder in Google Drive.",
+  "summary": "create a folder",
+  "docs": "https://developers.google.com/workspace/drive/api/reference/rest/v3/files/create",
+  "sideEffects": "unsafe-to-replay",
+  "$idempotencyComment": "files.create declares no idempotency key. Retrying can create a SECOND folder with the same name, because Drive names are not unique within a folder.",
+  "request": {
+    "method": "POST",
+    "path": "/drive/v3/files",
+    "encoding": "json",
+    "constants": {
+      "mimeType": "application/vnd.google-apps.folder",
+      "$comment": "This is a metadata-only create. The folder MIME type is Google's declared type for a Drive folder; no upload URI or media body is involved."
+    }
+  },
+  "config": [
+    { "type": "text", "key": "name", "label": "Folder name", "required": true, "description": "The folder name. Drive does not require names to be unique within a parent.", "send": { "as": "name", "value": "string" } },
+    {
+      "type": "text",
+      "key": "parents",
+      "label": "Parent folder IDs",
+      "description": "Parent folder ids, comma separated. Leave empty to create the folder in My Drive.",
+      "send": { "as": "parents", "value": "list", "separator": ",", "encoding": "array" },
+      "$comment": "File.parents is an array of STRINGS. A file can have only one parent even though the schema remains an array; multiple parents are no longer supported. encoding array is the exact existing vocabulary -- this is neither rows nor objects."
+    }
+  ],
+  "outputShape": [
+    { "path": "data.id", "type": "string", "description": "The created folder's id." },
+    { "path": "data.name", "type": "string", "description": "The folder name Google stored." },
+    { "path": "data.mimeType", "type": "string", "description": "The fixed Google Drive folder MIME type." },
+    { "path": "data.parents", "type": "array", "description": "The parent folder id array returned by Drive." }
+  ],
+  "$outputComment": "files.create returns the File directly at the response top level; the connector runtime exposes that body under data, with no {file: ...} wrapper.",
+  "contract": {
+    "$comment": "The File fields this action sends and reads, used by discovery drift projection.",
+    "sends": ["name", "mimeType", "parents"],
+    "reads": ["id", "name", "mimeType", "parents"]
+  }
+}

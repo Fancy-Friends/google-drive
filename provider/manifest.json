@@ -1,0 +1,33 @@
+{
+  "$comment": "THE hand-written part. Four packages -- ui, js, php, py -- are generated from this directory and are never edited. Every API fact here is read from Google's Drive v3 discovery document (https://www.googleapis.com/discovery/v1/apis/drive/v3/rest).",
+  "connectorApi": 1,
+  "service": "google_drive",
+  "title": "Google Drive",
+  "domain": "productivity",
+  "docs": "https://developers.google.com/workspace/drive/api/reference/rest/v3/files/create",
+  "auth": "oauth2",
+  "requires": ["accessToken", "refreshToken", "clientId", "clientSecret"],
+  "authorize": { "kind": "bearer", "credential": "accessToken" },
+  "oauth": {
+    "flow": "authorization_code",
+    "authorizeUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+    "tokenUrl": "https://oauth2.googleapis.com/token",
+    "scopes": ["https://www.googleapis.com/auth/drive.file"],
+    "accessTokenCredential": "accessToken",
+    "refreshTokenCredential": "refreshToken",
+    "accessTokenTtlSeconds": 3600,
+    "$scopeComment": "drive.file is the narrowest scope files.create declares and is sufficient to create and manage folders this app creates. It does NOT grant general access to pre-existing Drive files; any future action that targets arbitrary existing files must revisit the scope rather than silently assuming this connection can reach them.",
+    "$comment": "The host performs the browser consent flow and refreshes Google's one-hour access token; refreshToken is required so the connection does not die after that hour."
+  },
+  "sandbox": "none",
+  "$sandboxComment": "CHECKED. Drive v3 exposes one live service root and no test estate. A test folder is a real folder in somebody's real Drive.",
+  "sandboxNote": "Google Drive has no sandbox. Every folder created in live mode is real; use the faker during development and delete live test folders afterward.",
+  "baseUrls": { "live": "https://www.googleapis.com" },
+  "encoding": "json",
+  "credentialFields": [
+    { "key": "clientId", "label": "OAuth client ID", "scope": "provider", "secret": false, "help": "From Google Cloud Console. One value for the whole installation." },
+    { "key": "clientSecret", "label": "OAuth client secret", "scope": "provider", "secret": true, "help": "The client secret for the same OAuth app." },
+    { "key": "accessToken", "label": "Access token", "scope": "account", "secret": true, "help": "Per connected Google account; expires after one hour." },
+    { "key": "refreshToken", "label": "Refresh token", "scope": "account", "secret": true, "help": "Per connected Google account; the host uses it to refresh the access token." }
+  ]
+}

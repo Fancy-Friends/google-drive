@@ -1,0 +1,11 @@
+{
+  "$comment": "A File returned directly at the response top level, not wrapped in a file property. The shape uses the exact File fields this action reads.",
+  "operation": "folder_create",
+  "response": {
+    "kind": "drive#file",
+    "id": { "$fake": "id", "prefix": "1Folder" },
+    "name": { "$config": "name", "as": "string", "default": "New folder" },
+    "mimeType": "application/vnd.google-apps.folder",
+    "parents": ["root"]
+  }
+}
