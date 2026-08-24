@@ -15,6 +15,8 @@
     "scopes": ["https://www.googleapis.com/auth/drive.file"],
     "accessTokenCredential": "accessToken",
     "refreshTokenCredential": "refreshToken",
+    "$refreshTokenRotates": "Reusable. A refresh response carries access_token, expires_in, scope and token_type — no refresh_token — and Google’s own expiry rule is \"the refresh token has not been used for six months\", which is a statement about a token that is PERSISTED AND REPLAYED. Under rotation it would change hourly and that rule could never fire.",
+    "refreshTokenRotates": false,
     "accessTokenTtlSeconds": 3600,
     "$scopeComment": "drive.file is the narrowest scope files.create declares and is sufficient to create and manage folders this app creates. It does NOT grant general access to pre-existing Drive files; any future action that targets arbitrary existing files must revisit the scope rather than silently assuming this connection can reach them.",
     "$comment": "The host performs the browser consent flow and refreshes Google's one-hour access token; refreshToken is required so the connection does not die after that hour."
