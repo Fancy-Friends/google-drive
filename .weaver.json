@@ -19,7 +19,7 @@
     "packages/js/CHANGELOG.md": "6e29fc1665930a8ac3175b421958e177c5b483612a3fa7e028321162a5847c72",
     "packages/js/LICENSE": "9c194b64f52c76e677eb84a3e30f369c82727ea58abe50670d5de3f9ccd23270",
     "packages/js/README.md": "7cf5f1edf4979af9ecf32f215c1966c364a5345f453c3f52a78306e7f3f2b9c6",
-    "packages/js/package.json": "9def325bd3fae481733178b665ec159ac79f1aabbc22d6d615f6fa3287be323d",
+    "packages/js/package.json": "1b1ba856b85f46c217a6b8779447c8d4200b3cee2f5dbe8b9231759f3fb39235",
     "packages/js/src/actions/folder-create.ts": "42e364926cd6341019ef1c08619cfa955dbdeba3ff7c69f632d926774cf0e7f0",
     "packages/js/src/faker.ts": "c56c0dd962e6451891a7c21b4b39e76442d24b0754dcdc0b02e2ec6aa8915f71",
     "packages/js/src/flow.ts": "f3cb1322ae13cf8c405a27977fd111a0da892ac9c6c454f1c628d69a856b3f8f",
