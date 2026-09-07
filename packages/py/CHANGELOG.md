@@ -4,6 +4,30 @@ All notable changes to `@particle-academy/google-drive-ui`,
 `@particle-academy/google-drive-js`, `particle-academy/google-drive-php` and
 `fancy-google-drive`.
 
+## [0.3.2] — 2026-09-06
+
+### Changed
+
+- **Published through npm Trusted Publishing, so these packages now carry PROVENANCE.**
+
+Every earlier release went out under a scope-wide npm token. This one is
+published by an OIDC exchange from the release workflow itself, and npm records
+which workflow in which repository built it.
+`npm view @particle-academy/google-drive-ui@0.3.2` shows the attestation; releases before
+this one have none.
+
+What it buys a consumer: the tarball on the registry can be tied to a public
+commit and a public workflow run, rather than to whoever held a token. What it
+does not buy: nothing about the code changed, and the runtime behaviour of all
+four packages is identical to 0.3.1.
+
+- **`repository.directory` in the npm packages.**
+
+`@particle-academy/google-drive-ui` and `@particle-academy/google-drive-js` live at
+`packages/ui` and `packages/js` inside the provider repo. npm's `repository`
+field now says so, which makes the "Repository" link on each package page point
+at the package rather than at the repository root.
+
 ## [0.3.1] — 2026-08-24
 
 ### Fixed
