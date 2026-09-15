@@ -48,7 +48,7 @@ final class GoogleDriveFaker
     }
 
     /** @param array<string,mixed> $config */
-    private static function FolderCreate(array $config, mixed $fake): array
+    private static function FolderCreate(array $config, mixed $fake): array|\stdClass
     {
         return [
         'kind' => 'drive#file',
