@@ -17,11 +17,14 @@ dependency.
 from __future__ import annotations
 
 from ._fake import FakeValues
+from .actions.file_get import file_get
+from .actions.file_list import file_list
 from .actions.folder_create import folder_create
+from .actions.permission_create import permission_create
 from .faker import respond
 from .service import BASE_URLS, CONNECTOR_API_VERSION, REQUIRES, SANDBOX, SERVICE, TITLE, descriptor
 
-__version__ = "0.3.4"
+__version__ = "0.4.0"
 
 __all__ = [
     "BASE_URLS",
@@ -32,6 +35,9 @@ __all__ = [
     "TITLE",
     "FakeValues",
     "descriptor",
+    "file_get",
+    "file_list",
     "folder_create",
+    "permission_create",
     "respond",
 ]

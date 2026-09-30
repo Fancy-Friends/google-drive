@@ -1,0 +1,26 @@
+{
+  "$comment": "Two files, one a Workspace editor file (no size -- it has no binary content) and one an uploaded binary (size present), so an author sees both shapes before hitting the difference live. Lean projection matches file_list's fields constant -- no parents or webContentLink here; those are on file_get.",
+  "operation": "file_list",
+
+  "response": {
+    "files": [
+      {
+        "kind": "drive#file",
+        "id": { "$fake": "id", "prefix": "1Doc" },
+        "name": "Q3 report",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-09-28T16:20:00.000Z",
+        "webViewLink": "https://docs.google.com/document/d/1Doc/edit"
+      },
+      {
+        "kind": "drive#file",
+        "id": { "$fake": "id", "prefix": "1Pdf" },
+        "name": "invoice.pdf",
+        "mimeType": "application/pdf",
+        "size": "48213",
+        "modifiedTime": "2026-09-25T11:00:00.000Z",
+        "webViewLink": "https://drive.google.com/file/d/1Pdf/view"
+      }
+    ]
+  }
+}

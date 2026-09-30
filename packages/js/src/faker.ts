@@ -24,6 +24,46 @@
 
 import type { ConnectorFaker, FakeRequest } from "@particle-academy/fancy-connector-core";
 
+function fakeFileGet({ config, fake }: FakeRequest): unknown {
+  return {
+    "kind": "drive#file",
+    "id": (config.fileId !== undefined && config.fileId !== null && config.fileId !== "" ? String(config.fileId) : fake.id("1Pdf")),
+    "name": "invoice.pdf",
+    "mimeType": "application/pdf",
+    "size": "48213",
+    "parents": [
+      "root",
+    ],
+    "modifiedTime": "2026-09-25T11:00:00.000Z",
+    "webViewLink": "https://drive.google.com/file/d/1Pdf/view",
+    "webContentLink": "https://drive.google.com/uc?id=1Pdf&export=download",
+  };
+}
+
+function fakeFileList({ config, fake }: FakeRequest): unknown {
+  return {
+    "files": [
+      {
+        "kind": "drive#file",
+        "id": fake.id("1Doc"),
+        "name": "Q3 report",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-09-28T16:20:00.000Z",
+        "webViewLink": "https://docs.google.com/document/d/1Doc/edit",
+      },
+      {
+        "kind": "drive#file",
+        "id": fake.id("1Pdf"),
+        "name": "invoice.pdf",
+        "mimeType": "application/pdf",
+        "size": "48213",
+        "modifiedTime": "2026-09-25T11:00:00.000Z",
+        "webViewLink": "https://drive.google.com/file/d/1Pdf/view",
+      },
+    ],
+  };
+}
+
 function fakeFolderCreate({ config, fake }: FakeRequest): unknown {
   return {
     "kind": "drive#file",
@@ -36,10 +76,29 @@ function fakeFolderCreate({ config, fake }: FakeRequest): unknown {
   };
 }
 
+function fakePermissionCreate({ config, fake }: FakeRequest): unknown {
+  return {
+    "kind": "drive#permission",
+    "id": fake.id("perm"),
+    "type": (config.type !== undefined && config.type !== null && config.type !== "" ? String(config.type) : "user"),
+    "role": (config.role !== undefined && config.role !== null && config.role !== "" ? String(config.role) : "reader"),
+    "emailAddress": (config.emailAddress !== undefined && config.emailAddress !== null && config.emailAddress !== "" ? String(config.emailAddress) : "ada@example.test"),
+  };
+}
+
 export const googleDriveFaker: ConnectorFaker = (operation, request) => {
   switch (operation) {
+    case "file_get":
+      return fakeFileGet(request);
+
+    case "file_list":
+      return fakeFileList(request);
+
     case "folder_create":
       return fakeFolderCreate(request);
+
+    case "permission_create":
+      return fakePermissionCreate(request);
 
     default:
       // A faker asked for an operation it has no shape for must SAY so. Making

@@ -1,0 +1,86 @@
+{
+  "$comment": "permissions.create -> POST /drive/v3/files/{fileId}/permissions, request+response Permission. Read from the Drive v3 discovery document 2026-09-30. Scope unchanged: drive.file already covers sharing a file this app created. `emailAddress` is marked output-only in the discovery schema's general description, which is a known quirk of Google's generated docs for this endpoint -- it is the documented, required field for granting a user or group permission on create; Google's own Permissions guide confirms it.",
+  "operation": "permission_create",
+  "kind": "permission_create",
+  "title": "Share a Google Drive file",
+  "description": "Grant a user, group, domain, or anyone with the link access to a file.",
+  "summary": "share a file",
+  "docs": "https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/create",
+  "sideEffects": "unsafe-to-replay",
+  "$idempotencyComment": "permissions.create has no documented idempotency key. Calling it twice for the same grantee and role creates a SECOND permission resource rather than refusing or returning the first -- Drive does not deduplicate by grantee.",
+
+  "request": {
+    "method": "POST",
+    "path": "/drive/v3/files/{fileId}/permissions",
+    "encoding": "json",
+    "query": {
+      "sendNotificationEmail": "false",
+      "$comment": "Fixed to false rather than exposed as a choice: this connector has no email content vocabulary for the invitation Drive would otherwise send, and a silently-sent email to a grantee with no context is worse than none. A host wanting notification can send its own."
+    }
+  },
+
+  "config": [
+    {
+      "type": "text",
+      "key": "fileId",
+      "label": "File ID",
+      "required": true,
+      "send": { "in": "path", "as": "fileId", "value": "string" }
+    },
+    {
+      "type": "select",
+      "key": "type",
+      "label": "Grantee type",
+      "required": true,
+      "default": "user",
+      "options": [
+        { "value": "user", "label": "A specific person" },
+        { "value": "group", "label": "A Google Group" },
+        { "value": "domain", "label": "Everyone in a domain" },
+        { "value": "anyone", "label": "Anyone with the link" }
+      ],
+      "send": { "as": "type", "value": "string" }
+    },
+    {
+      "type": "select",
+      "key": "role",
+      "label": "Role",
+      "required": true,
+      "default": "reader",
+      "options": [
+        { "value": "reader", "label": "Reader" },
+        { "value": "commenter", "label": "Commenter" },
+        { "value": "writer", "label": "Writer" }
+      ],
+      "description": "organizer, fileOrganizer and owner exist in Drive's API but only apply inside a shared drive, which this action does not target.",
+      "send": { "as": "role", "value": "string" }
+    },
+    {
+      "type": "text",
+      "key": "emailAddress",
+      "label": "Email address",
+      "description": "Required when the grantee type is a person or a Google Group. Ignored for domain and anyone.",
+      "send": { "as": "emailAddress", "value": "string", "omitEmpty": true }
+    },
+    {
+      "type": "text",
+      "key": "domain",
+      "label": "Domain",
+      "description": "Required when the grantee type is domain, e.g. example.com. Ignored otherwise.",
+      "send": { "as": "domain", "value": "string", "omitEmpty": true }
+    }
+  ],
+
+  "outputShape": [
+    { "path": "data.id", "type": "string", "description": "The new permission's id." },
+    { "path": "data.type", "type": "string", "description": "Echoes what was sent." },
+    { "path": "data.role", "type": "string", "description": "Echoes what was sent." },
+    { "path": "data.emailAddress", "type": "string", "description": "Present for a user or group grant." },
+    { "path": "mode", "type": "string", "description": "Which estate this ran against. Google has no sandbox, so: fake or live." }
+  ],
+
+  "contract": {
+    "sends": ["fileId", "type", "role", "emailAddress", "domain"],
+    "reads": ["id", "type", "role", "emailAddress"]
+  }
+}

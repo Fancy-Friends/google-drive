@@ -43,6 +43,48 @@ console.log(`  ok   resolved from ${resolved}`);
 
 const GOLDENS = [
   {
+    "operation": "file_get",
+    "config": {},
+    "expected": {
+      "kind": "drive#file",
+      "id": "1Pdf_fake_738be566ebc3",
+      "name": "invoice.pdf",
+      "mimeType": "application/pdf",
+      "size": "48213",
+      "parents": [
+        "root"
+      ],
+      "modifiedTime": "2026-09-25T11:00:00.000Z",
+      "webViewLink": "https://drive.google.com/file/d/1Pdf/view",
+      "webContentLink": "https://drive.google.com/uc?id=1Pdf&export=download"
+    }
+  },
+  {
+    "operation": "file_list",
+    "config": {},
+    "expected": {
+      "files": [
+        {
+          "kind": "drive#file",
+          "id": "1Doc_fake_0002209ac639",
+          "name": "Q3 report",
+          "mimeType": "application/vnd.google-apps.document",
+          "modifiedTime": "2026-09-28T16:20:00.000Z",
+          "webViewLink": "https://docs.google.com/document/d/1Doc/edit"
+        },
+        {
+          "kind": "drive#file",
+          "id": "1Pdf_fake_60477aa36d78",
+          "name": "invoice.pdf",
+          "mimeType": "application/pdf",
+          "size": "48213",
+          "modifiedTime": "2026-09-25T11:00:00.000Z",
+          "webViewLink": "https://drive.google.com/file/d/1Pdf/view"
+        }
+      ]
+    }
+  },
+  {
     "operation": "folder_create",
     "config": {},
     "expected": {
@@ -53,6 +95,17 @@ const GOLDENS = [
       "parents": [
         "root"
       ]
+    }
+  },
+  {
+    "operation": "permission_create",
+    "config": {},
+    "expected": {
+      "kind": "drive#permission",
+      "id": "perm_fake_05ad8861209f",
+      "type": "user",
+      "role": "reader",
+      "emailAddress": "ada@example.test"
     }
   }
 ];
@@ -70,7 +123,7 @@ for (const { operation, config, expected } of GOLDENS) {
 
 // The ui package is a separate tarball, and js depends on it by its
 // published name — so this also proves that dependency resolves.
-assert.equal(GOOGLE_DRIVE_KINDS.length, 1);
+assert.equal(GOOGLE_DRIVE_KINDS.length, 4);
 for (const kind of GOOGLE_DRIVE_KINDS) {
   const keys = kind.configSchema.map((field) => field.key);
   assert.equal(keys[0], "connection");

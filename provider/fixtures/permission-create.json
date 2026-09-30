@@ -1,0 +1,12 @@
+{
+  "$comment": "A user grant, echoing type/role/emailAddress back exactly as Drive's own create response does.",
+  "operation": "permission_create",
+
+  "response": {
+    "kind": "drive#permission",
+    "id": { "$fake": "id", "prefix": "perm" },
+    "type": { "$config": "type", "as": "string", "default": "user" },
+    "role": { "$config": "role", "as": "string", "default": "reader" },
+    "emailAddress": { "$config": "emailAddress", "as": "string", "default": "ada@example.test" }
+  }
+}

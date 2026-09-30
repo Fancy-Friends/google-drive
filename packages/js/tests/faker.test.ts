@@ -25,6 +25,54 @@ import { fakeRequest } from "@particle-academy/fancy-connector-core";
 
 import { googleDriveFaker } from "../src/faker.js";
 
+test("file_get fakes the shape Google Drive publishes", () => {
+  const config = {};
+
+  const faked = googleDriveFaker("file_get", fakeRequest("google_drive", "file_get", config));
+
+  assert.deepEqual(faked, {
+    "kind": "drive#file",
+    "id": "1Pdf_fake_738be566ebc3",
+    "name": "invoice.pdf",
+    "mimeType": "application/pdf",
+    "size": "48213",
+    "parents": [
+      "root"
+    ],
+    "modifiedTime": "2026-09-25T11:00:00.000Z",
+    "webViewLink": "https://drive.google.com/file/d/1Pdf/view",
+    "webContentLink": "https://drive.google.com/uc?id=1Pdf&export=download"
+  });
+});
+
+test("file_list fakes the shape Google Drive publishes", () => {
+  const config = {};
+
+  const faked = googleDriveFaker("file_list", fakeRequest("google_drive", "file_list", config));
+
+  assert.deepEqual(faked, {
+    "files": [
+      {
+        "kind": "drive#file",
+        "id": "1Doc_fake_0002209ac639",
+        "name": "Q3 report",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-09-28T16:20:00.000Z",
+        "webViewLink": "https://docs.google.com/document/d/1Doc/edit"
+      },
+      {
+        "kind": "drive#file",
+        "id": "1Pdf_fake_60477aa36d78",
+        "name": "invoice.pdf",
+        "mimeType": "application/pdf",
+        "size": "48213",
+        "modifiedTime": "2026-09-25T11:00:00.000Z",
+        "webViewLink": "https://drive.google.com/file/d/1Pdf/view"
+      }
+    ]
+  });
+});
+
 test("folder_create fakes the shape Google Drive publishes", () => {
   const config = {};
 
@@ -38,6 +86,20 @@ test("folder_create fakes the shape Google Drive publishes", () => {
     "parents": [
       "root"
     ]
+  });
+});
+
+test("permission_create fakes the shape Google Drive publishes", () => {
+  const config = {};
+
+  const faked = googleDriveFaker("permission_create", fakeRequest("google_drive", "permission_create", config));
+
+  assert.deepEqual(faked, {
+    "kind": "drive#permission",
+    "id": "perm_fake_05ad8861209f",
+    "type": "user",
+    "role": "reader",
+    "emailAddress": "ada@example.test"
   });
 });
 

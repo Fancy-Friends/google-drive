@@ -67,6 +67,29 @@ The refresh tokens do **not** rotate: the same one is reusable, so a refresh may
 
 ### Actions
 
+#### `file_get` — Google Drive file
+
+Read one file's metadata and its download/view links.
+
+`GET /drive/v3/files/{fileId}` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `fileId` | yes | From file_list, or another node's output. |
+
+#### `file_list` — List Google Drive files
+
+List files this app created (or the user explicitly opened) in Google Drive. Under the drive.file scope this connector uses, a file created by any other app or picked up in the Drive UI directly never appears here.
+
+`GET /drive/v3/files` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `q` | no | Drive's query syntax, e.g. "mimeType='application/pdf' and trashed=false". Leave blank to list everything this app can see. |
+| `pageSize` | no | Files per page. Drive's maximum is 1000. |
+| `pageToken` | no | From a previous page's nextPageToken. |
+| `orderBy` | no | A comma-separated list of Drive sort keys, e.g. "modifiedTime desc". Leave blank for Drive's default order. |
+
 #### `folder_create` — Google Drive folder
 
 Create a folder in Google Drive.
@@ -77,6 +100,20 @@ Create a folder in Google Drive.
 |---|---|---|
 | `name` | yes | The folder name. Drive does not require names to be unique within a parent. |
 | `parents` | no | Parent folder ids, comma separated. Leave empty to create the folder in My Drive. |
+
+#### `permission_create` — Share a Google Drive file
+
+Grant a user, group, domain, or anyone with the link access to a file.
+
+`POST /drive/v3/files/{fileId}/permissions` · **unsafe to replay** — a retried durable run does it TWICE
+
+| Input | Required | What it is |
+|---|---|---|
+| `fileId` | yes | File ID |
+| `type` | yes | Grantee type |
+| `role` | yes | organizer, fileOrganizer and owner exist in Drive's API but only apply inside a shared drive, which this action does not target. |
+| `emailAddress` | no | Required when the grantee type is a person or a Google Group. Ignored for domain and anyone. |
+| `domain` | no | Required when the grantee type is domain, e.g. example.com. Ignored otherwise. |
 
 ## Run it before you have credentials
 

@@ -21,7 +21,10 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { PreparedRequest } from "@particle-academy/fancy-connector-core";
 
+import { googleDriveFileGet } from "../src/actions/file-get.js";
+import { googleDriveFileList } from "../src/actions/file-list.js";
 import { googleDriveFolderCreate } from "../src/actions/folder-create.js";
+import { googleDrivePermissionCreate } from "../src/actions/permission-create.js";
 
 /** Capture the prepared request instead of sending it. */
 function capture() {
@@ -43,6 +46,61 @@ const CREDENTIALS = {
   "accessToken": "test_accessToken",
   "refreshToken": "test_refreshToken"
 };
+
+test("file_get sends GET /drive/v3/files/{fileId}", async () => {
+  const { seen, transport } = capture();
+
+  await googleDriveFileGet({
+    config: {
+      "fileId": "example-fileId"
+    },
+    credentials: CREDENTIALS,
+    mode: "live",
+    transport,
+  });
+
+  assert.equal(seen.length, 1);
+  assert.equal(seen[0]!.method, "GET");
+  assert.ok(new URL(seen[0]!.url).pathname.endsWith("/drive/v3/files/example-fileId"), seen[0]!.url);
+
+  assert.deepEqual(
+    Object.fromEntries(new URL(seen[0]!.url).searchParams),
+    {
+      "fields": "id,name,mimeType,size,parents,modifiedTime,webViewLink,webContentLink"
+    },
+  );
+});
+
+test("file_list sends GET /drive/v3/files", async () => {
+  const { seen, transport } = capture();
+
+  await googleDriveFileList({
+    config: {
+      "q": "example-q",
+      "pageSize": 1000,
+      "pageToken": "example-pageToken",
+      "orderBy": "example-orderBy"
+    },
+    credentials: CREDENTIALS,
+    mode: "live",
+    transport,
+  });
+
+  assert.equal(seen.length, 1);
+  assert.equal(seen[0]!.method, "GET");
+  assert.ok(new URL(seen[0]!.url).pathname.endsWith("/drive/v3/files"), seen[0]!.url);
+
+  assert.deepEqual(
+    Object.fromEntries(new URL(seen[0]!.url).searchParams),
+    {
+      "q": "example-q",
+      "pageSize": "1000",
+      "pageToken": "example-pageToken",
+      "orderBy": "example-orderBy",
+      "fields": "files(id,name,mimeType,size,modifiedTime,webViewLink),nextPageToken"
+    },
+  );
+});
 
 test("folder_create sends POST /drive/v3/files", async () => {
   const { seen, transport } = capture();
@@ -71,13 +129,40 @@ test("folder_create sends POST /drive/v3/files", async () => {
   });
 });
 
+test("permission_create sends POST /drive/v3/files/{fileId}/permissions", async () => {
+  const { seen, transport } = capture();
+
+  await googleDrivePermissionCreate({
+    config: {
+      "fileId": "example-fileId",
+      "type": "user",
+      "role": "reader",
+      "emailAddress": "example-emailAddress",
+      "domain": "example-domain"
+    },
+    credentials: CREDENTIALS,
+    mode: "live",
+    transport,
+  });
+
+  assert.equal(seen.length, 1);
+  assert.equal(seen[0]!.method, "POST");
+  assert.ok(new URL(seen[0]!.url).pathname.endsWith("/drive/v3/files/example-fileId/permissions"), seen[0]!.url);
+
+  assert.deepEqual(JSON.parse(String(seen[0]!.body ?? "{}")), {
+    "type": "user",
+    "role": "reader",
+    "emailAddress": "example-emailAddress",
+    "domain": "example-domain"
+  });
+});
+
 test("the credential is placed the way the provider wants it", async () => {
   const { seen, transport } = capture();
 
-  await googleDriveFolderCreate({
+  await googleDriveFileGet({
     config: {
-      "name": "example-name",
-      "parents": "parents-one, parents-two"
+      "fileId": "example-fileId"
     },
     credentials: CREDENTIALS,
     mode: "live",
@@ -94,15 +179,13 @@ test("a missing required field is refused BEFORE anything is sent", async () => 
   const { seen, transport } = capture();
 
   await assert.rejects(
-    googleDriveFolderCreate({
-      config: {
-        "parents": "parents-one, parents-two"
-      },
+    googleDriveFileGet({
+      config: {},
       credentials: CREDENTIALS,
       mode: "live",
       transport,
     }),
-    new RegExp("name"),
+    new RegExp("fileId"),
   );
 
   assert.equal(seen.length, 0, "the request must not have been sent");

@@ -35,7 +35,10 @@ final class GoogleDriveFaker
         $fake = $request['fake'];
 
         return match ($operation) {
+            'file_get' => self::FileGet($config, $fake),
+            'file_list' => self::FileList($config, $fake),
             'folder_create' => self::FolderCreate($config, $fake),
+            'permission_create' => self::PermissionCreate($config, $fake),
             default => throw new \InvalidArgumentException(
                 // A faker asked for an operation it has no shape for must SAY so.
                 // Making something up would produce a green run whose output
@@ -45,6 +48,50 @@ final class GoogleDriveFaker
                     .'cannot be developed against, tested, or demonstrated.'
             ),
         };
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function FileGet(array $config, mixed $fake): array|\stdClass
+    {
+        return [
+        'kind' => 'drive#file',
+        'id' => ((($v = $config['fileId'] ?? null) !== null && $v !== '') ? (string) $v : $fake->id('1Pdf')),
+        'name' => 'invoice.pdf',
+        'mimeType' => 'application/pdf',
+        'size' => '48213',
+        'parents' => [
+            'root',
+        ],
+        'modifiedTime' => '2026-09-25T11:00:00.000Z',
+        'webViewLink' => 'https://drive.google.com/file/d/1Pdf/view',
+        'webContentLink' => 'https://drive.google.com/uc?id=1Pdf&export=download',
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function FileList(array $config, mixed $fake): array|\stdClass
+    {
+        return [
+        'files' => [
+            [
+                'kind' => 'drive#file',
+                'id' => $fake->id('1Doc'),
+                'name' => 'Q3 report',
+                'mimeType' => 'application/vnd.google-apps.document',
+                'modifiedTime' => '2026-09-28T16:20:00.000Z',
+                'webViewLink' => 'https://docs.google.com/document/d/1Doc/edit',
+            ],
+            [
+                'kind' => 'drive#file',
+                'id' => $fake->id('1Pdf'),
+                'name' => 'invoice.pdf',
+                'mimeType' => 'application/pdf',
+                'size' => '48213',
+                'modifiedTime' => '2026-09-25T11:00:00.000Z',
+                'webViewLink' => 'https://drive.google.com/file/d/1Pdf/view',
+            ],
+        ],
+    ];
     }
 
     /** @param array<string,mixed> $config */
@@ -58,6 +105,18 @@ final class GoogleDriveFaker
         'parents' => [
             'root',
         ],
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function PermissionCreate(array $config, mixed $fake): array|\stdClass
+    {
+        return [
+        'kind' => 'drive#permission',
+        'id' => $fake->id('perm'),
+        'type' => ((($v = $config['type'] ?? null) !== null && $v !== '') ? (string) $v : 'user'),
+        'role' => ((($v = $config['role'] ?? null) !== null && $v !== '') ? (string) $v : 'reader'),
+        'emailAddress' => ((($v = $config['emailAddress'] ?? null) !== null && $v !== '') ? (string) $v : 'ada@example.test'),
     ];
     }
 }

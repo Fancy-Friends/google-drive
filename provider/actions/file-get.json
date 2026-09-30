@@ -1,0 +1,46 @@
+{
+  "$comment": "files.get -> GET /drive/v3/files/{fileId}, response File. Read from the Drive v3 discovery document 2026-09-30. Deliberately metadata only, never the file's bytes -- webContentLink is a browser download URL a host fetches directly with the same credential, the same 'bytes never pass through the connector' precedent Resend and Microsoft Teams already set for exactly this reason.",
+  "operation": "file_get",
+  "kind": "file_get",
+  "title": "Google Drive file",
+  "description": "Read one file's metadata and its download/view links.",
+  "summary": "read a file",
+  "docs": "https://developers.google.com/workspace/drive/api/reference/rest/v3/files/get",
+  "sideEffects": "none",
+
+  "request": {
+    "method": "GET",
+    "path": "/drive/v3/files/{fileId}",
+    "query": {
+      "fields": "id,name,mimeType,size,parents,modifiedTime,webViewLink,webContentLink"
+    }
+  },
+
+  "config": [
+    {
+      "type": "text",
+      "key": "fileId",
+      "label": "File ID",
+      "required": true,
+      "description": "From file_list, or another node's output.",
+      "send": { "in": "path", "as": "fileId", "value": "string" }
+    }
+  ],
+
+  "outputShape": [
+    { "path": "data.id", "type": "string", "description": "The file id." },
+    { "path": "data.name", "type": "string", "description": "The file name." },
+    { "path": "data.mimeType", "type": "string", "description": "The file's MIME type." },
+    { "path": "data.size", "type": "string", "description": "Bytes, as a decimal STRING -- Drive's own int64 convention. Absent for Google Workspace editor files (Docs, Sheets, Slides) and for folders." },
+    { "path": "data.parents", "type": "array", "description": "Parent folder ids. A file has at most one today even though the field stays an array." },
+    { "path": "data.modifiedTime", "type": "string", "description": "RFC 3339." },
+    { "path": "data.webViewLink", "type": "string", "description": "Opens the file in its Drive/editor viewer. Requires the viewer to already have access." },
+    { "path": "data.webContentLink", "type": "string", "description": "A direct download URL for files with binary content. Absent for Google Workspace editor files and folders -- those export instead, which this connector does not yet offer." },
+    { "path": "mode", "type": "string", "description": "Which estate this ran against. Google has no sandbox, so: fake or live." }
+  ],
+
+  "contract": {
+    "sends": ["fileId"],
+    "reads": ["id", "name", "mimeType", "size", "parents", "modifiedTime", "webViewLink", "webContentLink"]
+  }
+}

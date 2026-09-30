@@ -4,6 +4,30 @@ All notable changes to `@particle-academy/google-drive-ui`,
 `@particle-academy/google-drive-js`, `particle-academy/google-drive-php` and
 `fancy-google-drive`.
 
+## [0.4.0] — 2026-09-30
+
+### Added
+
+- **`file_list`**, **`file_get`** and **`permission_create`** — read and
+  share, this connector's first operations beyond creating a folder. No
+  scope change: `drive.file` already covers them. Under that scope both
+  list and get only ever see files this app itself created (or that the
+  user explicitly opened through a Drive picker) — never the rest of the
+  connected account's Drive, said plainly in `file_list`'s own
+  description rather than left for someone to notice a file is silently
+  missing.
+- `file_get` carries `webContentLink`, a direct download URL fetched with
+  the same credential — the file's BYTES never pass through the
+  connector, the same precedent Resend and Microsoft Teams already set.
+  `file_list` carries a leaner projection (no `parents`, no
+  `webContentLink`) since a list row is for finding and previewing, not
+  a full record per file.
+- Deliberately NOT included: uploading a file's actual content. Drive's
+  media/multipart upload sends raw bytes in the request body, a shape
+  this connector's JSON-encoded actions do not build yet — a real
+  vocabulary question (mirroring how `attachments` stayed out of Resend
+  until inbound email forced the question), not a narrow first guess.
+
 ## [0.3.4] — 2026-09-12
 
 ### Changed

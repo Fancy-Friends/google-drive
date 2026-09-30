@@ -39,7 +39,10 @@ final class GoogleDriveFlow
 {
     /** @var list<class-string> */
     public const EXECUTORS = [
+        FileGetExecutor::class,
+        FileListExecutor::class,
         FolderExecutor::class,
+        PermissionCreateExecutor::class,
     ];
 
     /**

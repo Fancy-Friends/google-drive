@@ -1,0 +1,64 @@
+{
+  "$comment": "files.list -> GET /drive/v3/files, response FileList. Read from the Drive v3 discovery document 2026-09-30. Scope stays drive.file, which the existing folder_create action already chose over broad drive -- so this only ever lists files the connected app itself created or that the user explicitly opened via a Drive picker, never the whole of My Drive. That is a real, sharp limitation and is said plainly in the description rather than left for someone to discover the first time a file they expected is simply absent from the results.",
+  "operation": "file_list",
+  "kind": "file_list",
+  "title": "List Google Drive files",
+  "description": "List files this app created (or the user explicitly opened) in Google Drive. Under the drive.file scope this connector uses, a file created by any other app or picked up in the Drive UI directly never appears here.",
+  "summary": "list files",
+  "docs": "https://developers.google.com/workspace/drive/api/reference/rest/v3/files/list",
+  "sideEffects": "none",
+
+  "request": {
+    "method": "GET",
+    "path": "/drive/v3/files",
+    "query": {
+      "fields": "files(id,name,mimeType,size,modifiedTime,webViewLink),nextPageToken",
+      "$comment": "Drive v3 returns only id, name and mimeType by default -- everything else has to be asked for explicitly with `fields`, or it is silently absent rather than null. A fixed literal, not a config choice: an author should not have to know Drive's partial-response syntax to get a usable list. Kept lean on purpose -- parents, createdTime and webContentLink are on file_get's fuller projection; a list row is for identifying and previewing, not a full record per file."
+    }
+  },
+
+  "config": [
+    {
+      "type": "text",
+      "key": "q",
+      "label": "Search query",
+      "description": "Drive's query syntax, e.g. \"mimeType='application/pdf' and trashed=false\". Leave blank to list everything this app can see.",
+      "send": { "in": "query", "as": "q", "value": "string", "omitEmpty": true }
+    },
+    {
+      "type": "number",
+      "key": "pageSize",
+      "label": "Page size",
+      "min": 1,
+      "max": 1000,
+      "default": 100,
+      "description": "Files per page. Drive's maximum is 1000.",
+      "send": { "in": "query", "as": "pageSize", "value": "integer", "min": 1, "max": 1000, "default": 100 }
+    },
+    {
+      "type": "text",
+      "key": "pageToken",
+      "label": "Page token",
+      "description": "From a previous page's nextPageToken.",
+      "send": { "in": "query", "as": "pageToken", "value": "string", "omitEmpty": true }
+    },
+    {
+      "type": "text",
+      "key": "orderBy",
+      "label": "Order by",
+      "description": "A comma-separated list of Drive sort keys, e.g. \"modifiedTime desc\". Leave blank for Drive's default order.",
+      "send": { "in": "query", "as": "orderBy", "value": "string", "omitEmpty": true }
+    }
+  ],
+
+  "outputShape": [
+    { "path": "data.files", "type": "array", "description": "id, name, mimeType, size, modifiedTime, webViewLink per file -- leaner than file_get's projection. Read one file directly with file_get for parents and webContentLink." },
+    { "path": "data.nextPageToken", "type": "string", "description": "Present when there is another page." },
+    { "path": "mode", "type": "string", "description": "Which estate this ran against. Google has no sandbox, so: fake or live." }
+  ],
+
+  "contract": {
+    "sends": ["q", "pageSize", "pageToken", "orderBy"],
+    "reads": ["files", "nextPageToken"]
+  }
+}

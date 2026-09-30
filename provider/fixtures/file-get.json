@@ -1,0 +1,16 @@
+{
+  "$comment": "A binary file (has size and webContentLink), echoing the id that was asked for -- the same trap as every other provider's get fixture, so a flow wiring {{ $json.data.id }} against the wrong file is caught rather than faked past.",
+  "operation": "file_get",
+
+  "response": {
+    "kind": "drive#file",
+    "id": { "$config": "fileId", "as": "string", "fallback": { "$fake": "id", "prefix": "1Pdf" } },
+    "name": "invoice.pdf",
+    "mimeType": "application/pdf",
+    "size": "48213",
+    "parents": ["root"],
+    "modifiedTime": "2026-09-25T11:00:00.000Z",
+    "webViewLink": "https://drive.google.com/file/d/1Pdf/view",
+    "webContentLink": "https://drive.google.com/uc?id=1Pdf&export=download"
+  }
+}

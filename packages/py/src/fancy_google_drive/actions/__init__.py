@@ -7,8 +7,14 @@
 #
 # npm run provider -- google_drive
 
+from .file_get import file_get
+from .file_list import file_list
 from .folder_create import folder_create
+from .permission_create import permission_create
 
 __all__ = [
+    "file_get",
+    "file_list",
     "folder_create",
+    "permission_create",
 ]

@@ -21,6 +21,56 @@ from fancy_google_drive._fake import FakeValues, seed_for_call
 from fancy_google_drive.faker import respond
 
 
+def test_file_get_fakes_the_published_shape() -> None:
+    config = {}
+    fake = FakeValues(seed_for_call("google_drive", "file_get", config))
+
+    faked = respond("file_get", {"config": config, "fake": fake})
+
+    assert faked == {
+        "kind": "drive#file",
+        "id": "1Pdf_fake_738be566ebc3",
+        "name": "invoice.pdf",
+        "mimeType": "application/pdf",
+        "size": "48213",
+        "parents": [
+            "root",
+        ],
+        "modifiedTime": "2026-09-25T11:00:00.000Z",
+        "webViewLink": "https://drive.google.com/file/d/1Pdf/view",
+        "webContentLink": "https://drive.google.com/uc?id=1Pdf&export=download",
+    }
+
+
+def test_file_list_fakes_the_published_shape() -> None:
+    config = {}
+    fake = FakeValues(seed_for_call("google_drive", "file_list", config))
+
+    faked = respond("file_list", {"config": config, "fake": fake})
+
+    assert faked == {
+        "files": [
+            {
+                "kind": "drive#file",
+                "id": "1Doc_fake_0002209ac639",
+                "name": "Q3 report",
+                "mimeType": "application/vnd.google-apps.document",
+                "modifiedTime": "2026-09-28T16:20:00.000Z",
+                "webViewLink": "https://docs.google.com/document/d/1Doc/edit",
+            },
+            {
+                "kind": "drive#file",
+                "id": "1Pdf_fake_60477aa36d78",
+                "name": "invoice.pdf",
+                "mimeType": "application/pdf",
+                "size": "48213",
+                "modifiedTime": "2026-09-25T11:00:00.000Z",
+                "webViewLink": "https://drive.google.com/file/d/1Pdf/view",
+            },
+        ],
+    }
+
+
 def test_folder_create_fakes_the_published_shape() -> None:
     config = {}
     fake = FakeValues(seed_for_call("google_drive", "folder_create", config))
@@ -35,6 +85,21 @@ def test_folder_create_fakes_the_published_shape() -> None:
         "parents": [
             "root",
         ],
+    }
+
+
+def test_permission_create_fakes_the_published_shape() -> None:
+    config = {}
+    fake = FakeValues(seed_for_call("google_drive", "permission_create", config))
+
+    faked = respond("permission_create", {"config": config, "fake": fake})
+
+    assert faked == {
+        "kind": "drive#permission",
+        "id": "perm_fake_05ad8861209f",
+        "type": "user",
+        "role": "reader",
+        "emailAddress": "ada@example.test",
     }
 
 

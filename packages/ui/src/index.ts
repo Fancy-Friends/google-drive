@@ -18,12 +18,21 @@
  */
 
 export * from "./service.js";
+export * from "./kinds/file-get.js";
+export * from "./kinds/file-list.js";
 export * from "./kinds/folder-create.js";
+export * from "./kinds/permission-create.js";
 
 import type { NodeKindDefinition } from "@particle-academy/fancy-flow/engine";
+import { googleDriveFileGetKind } from "./kinds/file-get.js";
+import { googleDriveFileListKind } from "./kinds/file-list.js";
 import { googleDriveFolderKind } from "./kinds/folder-create.js";
+import { googleDrivePermissionCreateKind } from "./kinds/permission-create.js";
 
 /** Every Google Drive kind, for a host that registers the lot. */
 export const GOOGLE_DRIVE_KINDS: NodeKindDefinition[] = [
+  googleDriveFileGetKind,
+  googleDriveFileListKind,
   googleDriveFolderKind,
+  googleDrivePermissionCreateKind,
 ];

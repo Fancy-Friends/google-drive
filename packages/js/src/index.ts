@@ -21,4 +21,7 @@
 
 export * from "./service.js";
 export * from "./faker.js";
+export * from "./actions/file-get.js";
+export * from "./actions/file-list.js";
 export * from "./actions/folder-create.js";
+export * from "./actions/permission-create.js";

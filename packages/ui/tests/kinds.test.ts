@@ -33,6 +33,9 @@ test("every kind declares what it emits", () => {
 
 test("the registry names are exactly what the manifest says", () => {
   assert.deepEqual(GOOGLE_DRIVE_KINDS.map((kind) => kind.name), [
-    "@particle-academy/google_drive_folder"
+    "@particle-academy/google_drive_file_get",
+    "@particle-academy/google_drive_file_list",
+    "@particle-academy/google_drive_folder",
+    "@particle-academy/google_drive_permission_create"
   ]);
 });
