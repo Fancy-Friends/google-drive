@@ -20,12 +20,12 @@ return [
 
     'credentials' => [
         // OAuth client ID (one per installation).
-        'clientId' => env('GOOGLE_DRIVE_CLIENTID'),
+        'clientId' => env('GOOGLE_DRIVE_CLIENT_ID', env('GOOGLE_DRIVE_CLIENTID')),
         // OAuth client secret (one per installation, secret).
-        'clientSecret' => env('GOOGLE_DRIVE_CLIENTSECRET'),
+        'clientSecret' => env('GOOGLE_DRIVE_CLIENT_SECRET', env('GOOGLE_DRIVE_CLIENTSECRET')),
         // Access token (per connected account, secret).
-        'accessToken' => env('GOOGLE_DRIVE_ACCESSTOKEN'),
+        'accessToken' => env('GOOGLE_DRIVE_ACCESS_TOKEN', env('GOOGLE_DRIVE_ACCESSTOKEN')),
         // Refresh token (per connected account, secret).
-        'refreshToken' => env('GOOGLE_DRIVE_REFRESHTOKEN'),
+        'refreshToken' => env('GOOGLE_DRIVE_REFRESH_TOKEN', env('GOOGLE_DRIVE_REFRESHTOKEN')),
     ],
 ];

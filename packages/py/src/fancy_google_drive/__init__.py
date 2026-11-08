@@ -24,7 +24,7 @@ from .actions.permission_create import permission_create
 from .faker import respond
 from .service import BASE_URLS, CONNECTOR_API_VERSION, REQUIRES, SANDBOX, SERVICE, TITLE, descriptor
 
-__version__ = "0.6.0"
+__version__ = "0.6.1"
 
 __all__ = [
     "BASE_URLS",
