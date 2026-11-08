@@ -4,6 +4,22 @@ All notable changes to `@particle-academy/google-drive-ui`,
 `@particle-academy/google-drive-js`, `particle-academy/google-drive-php` and
 `fancy-google-drive`.
 
+## [0.6.1] — 2026-11-08
+
+### Fixed
+
+- **The Laravel config's environment variable names now split camelCase**,
+  as documented. **Consumer action: none.** The old unsplit names are still
+  read as a fallback, so an app that set them keeps working; the new names
+  are preferred.
+
+  | Preferred | Still read |
+  |---|---|
+  | `GOOGLE_DRIVE_CLIENT_ID` | `GOOGLE_DRIVE_CLIENTID` |
+  | `GOOGLE_DRIVE_CLIENT_SECRET` | `GOOGLE_DRIVE_CLIENTSECRET` |
+  | `GOOGLE_DRIVE_ACCESS_TOKEN` | `GOOGLE_DRIVE_ACCESSTOKEN` |
+  | `GOOGLE_DRIVE_REFRESH_TOKEN` | `GOOGLE_DRIVE_REFRESHTOKEN` |
+
 ## [0.6.0] — 2026-11-08
 
 ### Added
