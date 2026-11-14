@@ -4,6 +4,22 @@ All notable changes to `@particle-academy/google-drive-ui`,
 `@particle-academy/google-drive-js`, `particle-academy/google-drive-php` and
 `fancy-google-drive`.
 
+## [0.6.2] — 2026-11-14
+
+### Added
+
+- **Complete setup steps**, in SETUP.md and the registry index. Every Google connector shares
+  the same first four, because they share one consent grant:
+  - the Cloud project;
+  - enabling the API;
+  - the consent screen (Branding, Audience with test users, Data Access with this
+    connector's scopes);
+  - a Web application OAuth client with `{{oauthRedirectUrl}}` as an authorized redirect URI.
+  - an AGENT step that connects an account and checks it works.
+
+  Each step cites the Google page it was checked against on 2026-11-14.
+- A one-line `summary`.
+
 ## [0.6.1] — 2026-11-08
 
 ### Fixed

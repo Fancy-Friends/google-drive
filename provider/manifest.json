@@ -39,6 +39,49 @@
   "sandboxNote": "Google Drive has no sandbox. Every folder created in live mode is real; use the faker during development and delete live test folders afterward.",
   "baseUrls": { "live": "https://www.googleapis.com" },
   "encoding": "json",
+  "summary": "List, read and share Google Drive files the app created or the person opened with it (drive.file).",
+  "$setupComment": "Steps read from Google's docs on 2026-11-14 (each cites its page). Every Google connector shares one grant, so the first four steps are the same for all of them; do them once.",
+  "setup": [
+    {
+      "title": "Create (or reuse) the Google Cloud project for {{appName}}",
+      "detail": "Every Google connector shares ONE consent grant (oauth.grant \"google\"), so use one project and one OAuth client for all of them: one consent and one refresh token per person.",
+      "url": "https://developers.google.com/workspace/guides/create-project"
+    },
+    {
+      "title": "Enable the Google Drive API",
+      "detail": "Console: APIs & Services, Library; open the Google Drive API and click Enable.",
+      "url": "https://developers.google.com/workspace/guides/enable-apis"
+    },
+    {
+      "title": "Configure the consent screen",
+      "detail": "Console: Google Auth platform, Branding (app name {{appName}}, support email, contact email), then Audience: Internal for people inside your Google Workspace organisation only, or External (while it is in testing, add each tester under Test users). Then Data Access, Add or Remove Scopes, and add `https://www.googleapis.com/auth/drive.file` beside the scopes of any other Google connector you use. You cannot remove the consent screen once it is configured.",
+      "url": "https://developers.google.com/workspace/guides/configure-oauth-consent"
+    },
+    {
+      "title": "Create a Web application OAuth client",
+      "detail": "Console: Google Auth platform, Clients, Create Client; type Web application. Under Authorized redirect URIs click Add URI and paste {{oauthRedirectUrl}}, then Create. Copy the client ID and client secret when the client is created.",
+      "url": "https://developers.google.com/workspace/guides/create-credentials",
+      "copy": [
+        {
+          "label": "Authorized redirect URI",
+          "value": "{{oauthRedirectUrl}}"
+        }
+      ],
+      "fields": [
+        "clientId",
+        "clientSecret"
+      ]
+    },
+    {
+      "title": "Connect an account and check it works",
+      "detail": "Connect one Google account through {{appName}}'s OAuth flow, then run the check below.",
+      "url": "https://developers.google.com/workspace/drive/api/reference/rest/v3/files/list",
+      "actor": "agent",
+      "prompt": "Using {{appName}}'s {{connector}} connection, run file_list and report how many files it returns. With drive.file, an empty list on a new connection is correct: it reaches only files this app created or the person opened with it.",
+      "done": "file_list answers without an error (an empty list is expected on a new connection)."
+    }
+  ],
+
   "credentialFields": [
     { "key": "clientId", "label": "OAuth client ID", "scope": "provider", "secret": false, "help": "From Google Cloud Console. One value for the whole installation." },
     { "key": "clientSecret", "label": "OAuth client secret", "scope": "provider", "secret": true, "help": "The client secret for the same OAuth app." },
